@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form';
+import { createPost } from '../actions/index';
 
 class PostsNew extends Component {
   render() {
     const { fields: { title, categories, content}, handleSubmit } = this.props;
-    console.log(title)
-
     return (
-      <form onSubmit={handleSubmit}>
+      // form needs an action creator to receive the properties off of the form
+      <form onSubmit={handleSubmit(this.props.createPost)}>
       <h3> Create a New Post</h3>
       <div className="form-group">
         <label>Title</label>
@@ -29,8 +29,11 @@ class PostsNew extends Component {
     );
   }
 }
-
+//connect: 1st argument is mapStateToProps, 2nd is mapDispatchToProps
+// reduxForm, 1st is form config, 2nd is mapStateToProps, 3rd, is mapDispatchToProps
 export default reduxForm({
   form: 'PostsNewForm',
   fields: ['title', 'category', 'content']
-})(PostsNew);
+}, null, { createPost })(PostsNew);
+//redux form can be used just like connect to inject action creators into component, and create a container
+// out of the component.
