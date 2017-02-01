@@ -1,14 +1,28 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes} from 'react';
 import { reduxForm } from 'redux-form';
 import { createPost } from '../actions/index';
 import { Link } from 'react-router';
 
 class PostsNew extends Component {
+  static contextTypes = {
+    router: PropTypes.object
+    //the router should be a clear reminder...i need this ctx object to access the router
+  };
+
+  onSubmit(props) {
+    this.props.createPost(props)
+      .then(() => {
+      //blog post has been created -> navigate to index by calling this.context.router.push
+      this.context.router.push('/');
+    });
+    //creats promise as a payload, when it's resolved, it means blog post was sucesfuuly created
+  }
+
   render() {
     const { fields: { title, categories, content}, handleSubmit } = this.props;
     return (
       // form needs an action creator to receive the properties off of the form
-      <form onSubmit={handleSubmit(this.props.createPost)}>
+      <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
       <h3> Create a New Post</h3>
 
       <div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
